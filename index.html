@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Vinted Seller Pro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --g:rgba(255,255,255,.55);--gb:rgba(255,255,255,.85);
+  --sg:0 8px 32px rgba(100,120,180,.13),0 1.5px 0 rgba(255,255,255,.9) inset;
+  --sd:0 20px 60px rgba(80,100,160,.18);
+  --ac:#0071e3;--ag:rgba(0,113,227,.35);
+  --tx:#1d1d1f;--su:#6e6e73;
+  --gr:#34c759;--re:#ff3b30;--or:#ff9500;--pu:#bf5af2;
+  --r:18px;--rs:12px;
+}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;
+  background:linear-gradient(135deg,#dde3f0,#e8ecf8 35%,#f0eef8 65%,#e4eaf4);color:var(--tx);}
+body::before{content:'';position:fixed;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(100,160,255,.18),transparent 70%);
+  top:-100px;left:-100px;filter:blur(80px);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(180,120,255,.14),transparent 70%);
+  bottom:-50px;right:-50px;filter:blur(80px);pointer-events:none;z-index:0;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:500;
+background:rgba(225,230,245,.72);
+backdrop-filter:saturate(200%) blur(30px);-webkit-backdrop-filter:saturate(200%) blur(30px);
+border-bottom:1px solid rgba(255,255,255,.75);
+box-shadow:0 1px 0 rgba(180,200,255,.2),0 4px 20px rgba(100,120,180,.07);}
+.nav-row1{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;}
+.nav-logo{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:700;color:var(–tx);}
+.nav-back{display:none;align-items:center;gap:3px;background:none;border:none;cursor:pointer;
+font-size:14px;font-weight:600;color:var(–ac);padding:3px 6px 3px 0;font-family:inherit;}
+.nav-back svg{width:16px;height:16px;}
+.nav-back.on{display:flex;}
+.nav-badge{background:linear-gradient(135deg,rgba(0,113,227,.88),rgba(80,160,255,.88));
+color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.nav-dots{display:flex;gap:5px;align-items:center;}
+.nd{width:6px;height:6px;border-radius:50%;background:rgba(0,113,227,.2);cursor:pointer;transition:all .3s;}
+.nd.on{background:var(–ac);box-shadow:0 0 6px var(–ag);width:14px;border-radius:3px;}
+
+.cat-row{display:flex;gap:7px;padding:9px 14px 10px;overflow-x:auto;scrollbar-width:none;}
+.cat-row::-webkit-scrollbar{display:none;}
+.ctab{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;
+border:1.5px solid rgba(255,255,255,.7);background:rgba(255,255,255,.4);
+font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(–su);flex-shrink:0;
+backdrop-filter:blur(10px);transition:all .25s;
+box-shadow:0 2px 8px rgba(100,120,180,.07),0 1px 0 rgba(255,255,255,.8) inset;}
+.ctab.on{background:linear-gradient(135deg,rgba(0,113,227,.88),rgba(60,150,255,.85));
+border-color:rgba(255,255,255,.5);color:#fff;box-shadow:0 4px 14px var(–ag);}
+.ctab:hover:not(.on){background:rgba(255,255,255,.65);}
+.ci{font-size:15px;}
+
+.aw{position:fixed;top:108px;left:0;right:0;bottom:70px;overflow:hidden;z-index:1;}
+.track{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.pg{min-width:100vw;height:100%;overflow-y:auto;overflow-x:hidden;padding:0 0 16px;}
+.pg::-webkit-scrollbar{width:3px;}
+.pg::-webkit-scrollbar-thumb{background:rgba(180,180,200,.3);border-radius:2px;}
+
+.sh{position:fixed;right:0;top:54%;transform:translateY(-50%);z-index:400;
+display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 5px;
+background:rgba(255,255,255,.4);backdrop-filter:blur(10px);
+border-radius:10px 0 0 10px;border:1px solid rgba(255,255,255,.7);border-right:none;
+cursor:pointer;transition:opacity .4s;animation:shp 2s ease 1.5s 3;}
+.sh.gone{opacity:0;pointer-events:none;}
+.sh svg{width:13px;height:13px;color:var(–ac);}
+.sh span{font-size:8px;font-weight:700;color:var(–su);letter-spacing:.05em;writing-mode:vertical-rl;}
+@keyframes shp{0%,100%{transform:translateY(-50%)}50%{transform:translateY(-50%) translateX(-5px)}}
+
+.tbar{position:fixed;bottom:0;left:0;right:0;z-index:500;height:70px;display:flex;
+background:rgba(225,230,245,.8);backdrop-filter:saturate(200%) blur(30px);
+-webkit-backdrop-filter:saturate(200%) blur(30px);
+border-top:1px solid rgba(255,255,255,.75);padding-bottom:4px;}
+.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:3px;border:none;background:none;cursor:pointer;font-family:inherit;padding:6px 2px 0;}
+.tbtn svg{width:21px;height:21px;transition:all .2s;}
+.tbtn span{font-size:9px;font-weight:600;color:var(–su);transition:all .2s;}
+.tbtn.on svg{color:var(–ac);filter:drop-shadow(0 0 5px var(–ag));}
+.tbtn.on span{color:var(–ac);}
+.tbtn:not(.on) svg{color:rgba(100,100,120,.45);}
+
+.card{background:var(–g);backdrop-filter:saturate(180%) blur(24px);
+-webkit-backdrop-filter:saturate(180%) blur(24px);
+border-radius:var(–r);border:1px solid var(–gb);box-shadow:var(–sg);
+padding:18px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.card::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 50%,transparent);}
+.card::after{content:’’;position:absolute;inset:0;border-radius:var(–r);
+background:linear-gradient(145deg,rgba(255,255,255,.22) 0%,transparent 50%,rgba(180,200,255,.07) 100%);pointer-events:none;}
+.card:hover{transform:translateY(-2px);box-shadow:var(–sd);}
+.mb{margin-bottom:12px;}
+.ct{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+color:var(–su);margin-bottom:13px;display:flex;align-items:center;gap:6px;position:relative;z-index:1;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(–ac);box-shadow:0 0 7px var(–ag);}
+.dg{background:var(–gr);box-shadow:0 0 7px rgba(52,199,89,.5);}
+.do{background:var(–or);box-shadow:0 0 7px rgba(255,149,0,.5);}
+.dr{background:var(–re);box-shadow:0 0 7px rgba(255,59,48,.4);}
+.dp{background:var(–pu);box-shadow:0 0 7px rgba(191,90,242,.5);}
+.ds{background:#a0a0a8;}
+
+.fg{margin-bottom:10px;position:relative;z-index:1;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
+label{display:block;font-size:11px;font-weight:600;color:var(–su);margin-bottom:4px;letter-spacing:.02em;}
+input,select,textarea{width:100%;background:rgba(255,255,255,.5);backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,.75);border-radius:var(–rs);padding:9px 11px;
+font-size:13px;font-family:inherit;color:var(–tx);outline:none;transition:all .22s;
+box-shadow:0 2px 7px rgba(100,120,180,.07),0 1px 0 rgba(255,255,255,.8) inset;appearance:none;}
+input:focus,select:focus,textarea:focus{background:rgba(255,255,255,.8);border-color:rgba(0,113,227,.5);
+box-shadow:0 0 0 3px rgba(0,113,227,.1),0 1px 0 rgba(255,255,255,.9) inset;}
+textarea{resize:vertical;min-height:60px;}
+select{background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘11’ height=‘7’%3E%3Cpath d=‘M1 1l4.5 4.5L10 1’ stroke=’%236e6e73’ stroke-width=‘1.5’ fill=‘none’ stroke-linecap=‘round’/%3E%3C/svg%3E”);background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px;}
+.chip{padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.75);font-size:11px;font-weight:500;cursor:pointer;background:rgba(255,255,255,.45);color:var(–tx);transition:all .2s;user-select:none;box-shadow:0 2px 5px rgba(100,120,180,.06);}
+.chip.on{background:linear-gradient(135deg,rgba(0,113,227,.85),rgba(60,150,255,.85));border-color:rgba(255,255,255,.6);color:#fff;box-shadow:0 3px 12px var(–ag);}
+.chip:hover:not(.on){background:rgba(255,255,255,.65);}
+.tg{display:flex;flex-direction:column;gap:6px;position:relative;z-index:1;}
+.ti{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.35);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.65);border-radius:var(–rs);padding:9px 11px;transition:all .2s;}
+.ti:hover{background:rgba(255,255,255,.55);}
+.tl{font-size:12px;font-weight:500;color:var(–tx);}
+.ts{font-size:10px;color:var(–su);margin-top:1px;}
+.tog{width:40px;height:24px;border-radius:12px;background:rgba(200,200,210,.6);position:relative;transition:background .25s;cursor:pointer;flex-shrink:0;border:1px solid rgba(255,255,255,.5);box-shadow:0 2px 5px rgba(0,0,0,.1) inset;outline:none;}
+.tog.on{background:linear-gradient(135deg,#34c759,#30d158);box-shadow:0 0 9px rgba(52,199,89,.4);}
+.tog::after{content:’’;position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:1px;left:1px;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.tog.on::after{transform:translateX(16px);}
+.btnp{width:100%;padding:13px;border-radius:var(–r);border:none;cursor:pointer;font-size:15px;font-weight:600;font-family:inherit;background:linear-gradient(135deg,rgba(0,113,227,.92),rgba(60,150,255,.88));color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:0 7px 26px var(–ag),0 1px 0 rgba(255,255,255,.3) inset;transition:all .25s;position:relative;overflow:hidden;}
+.btnp::before{content:’’;position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.16),transparent);}
+.btnp:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,113,227,.45);}
+.bdgs{display:flex;flex-wrap:wrap;gap:5px;}
+.bd{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid transparent;}
+.bg_{background:rgba(52,199,89,.12);color:#1a8c3a;border-color:rgba(52,199,89,.25);}
+.bb_{background:rgba(0,113,227,.1);color:var(–ac);border-color:rgba(0,113,227,.2);}
+.bo_{background:rgba(255,149,0,.1);color:#b36200;border-color:rgba(255,149,0,.25);}
+.br_{background:rgba(255,59,48,.08);color:var(–re);border-color:rgba(255,59,48,.2);}
+.sep{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(180,200,255,.3) 20%,rgba(180,200,255,.3) 80%,transparent);margin:11px 0;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 13px 14px;}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start;}
+@media(max-width:760px){.hgrid{grid-template-columns:1fr;}}
+@keyframes fu{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .38s cubic-bezier(.34,1.2,.64,1) forwards;}
+
+.obj-wrap{display:flex;align-items:center;justify-content:center;padding:22px 0 10px;perspective:900px;}
+
+.mac3{display:flex;flex-direction:column;align-items:center;transform-style:preserve-3d;}
+.mac-body{
+width:220px;height:148px;position:relative;
+transform:rotateX(8deg) rotateY(-14deg);
+transform-style:preserve-3d;
+animation:mfl 4s ease-in-out infinite;
+cursor:pointer;transition:transform .5s cubic-bezier(.34,1.2,.64,1);
+}
+.mac-body:hover{transform:rotateX(3deg) rotateY(0deg) scale(1.07);animation:none;}
+@keyframes mfl{0%,100%{transform:rotateX(8deg) rotateY(-14deg) translateY(0);}50%{transform:rotateX(8deg) rotateY(-14deg) translateY(-9px);}}
+.mac-lid{width:220px;height:148px;background:linear-gradient(145deg,#2d2d2f,#1a1a1c 50%,#252527);border-radius:12px 12px 3px 3px;position:relative;overflow:hidden;
+box-shadow:0 0 0 1px rgba(255,255,255,.06),0 28px 56px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08);}
+.mac-screen{position:absolute;inset:7px;background:#000;border-radius:7px;overflow:hidden;}
+.mac-glow{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,113,227,.18),rgba(80,160,255,.1) 50%,rgba(140,80,255,.08));animation:sg 3.5s ease-in-out infinite;}
+@keyframes sg{0%,100%{opacity:.7}50%{opacity:1}}
+.mac-mbar{position:absolute;top:0;left:0;right:0;height:11px;background:rgba(255,255,255,.07);display:flex;align-items:center;padding:0 7px;gap:5px;}
+.mr{width:5px;height:5px;border-radius:50%;background:#ff5f57;}
+.my{width:5px;height:5px;border-radius:50%;background:#ffbd2e;}
+.mg{width:5px;height:5px;border-radius:50%;background:#28c840;}
+.mac-cnt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.mac-em{font-size:26px;opacity:.85;}
+.mac-lbl{font-size:7px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.06em;}
+.mac-al{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.1;}
+.mac-al svg{width:20px;height:20px;fill:#fff;}
+.mac-base-w{width:240px;height:12px;margin-top:-2px;}
+.mac-base{width:100%;height:100%;background:linear-gradient(180deg,#3a3a3c,#2c2c2e);border-radius:0 0 7px 7px;box-shadow:0 4px 18px rgba(0,0,0,.4);}
+.mac-notch{width:55px;height:7px;background:#1c1c1e;border-radius:0 0 5px 5px;margin:-1px auto 0;}
+.mac-shadow{width:200px;height:14px;background:radial-gradient(ellipse,rgba(0,0,0,.28),transparent 70%);border-radius:50%;margin-top:9px;filter:blur(5px);}
+
+.ph3{width:82px;height:168px;position:relative;
+transform:rotateX(6deg) rotateY(-12deg);
+transform-style:preserve-3d;
+animation:pfl 4s ease-in-out infinite;
+cursor:pointer;transition:transform .5s;}
+.ph3:hover{transform:rotateX(2deg) rotateY(0deg) scale(1.1);animation:none;}
+@keyframes pfl{0%,100%{transform:rotateX(6deg) rotateY(-12deg) translateY(0);}50%{transform:rotateX(6deg) rotateY(-12deg) translateY(-9px);}}
+.ph-body{width:100%;height:100%;background:linear-gradient(145deg,#2d2d2f,#1a1a1c,#252527);border-radius:20px;position:relative;overflow:hidden;
+box-shadow:0 0 0 1px rgba(255,255,255,.07),0 20px 48px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09);}
+.ph-screen{position:absolute;inset:3px;background:#000;border-radius:17px;overflow:hidden;}
+.ph-glow{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,113,227,.2),rgba(160,80,255,.12));animation:sg 3.5s ease-in-out infinite;}
+.ph-notch{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:28px;height:7px;background:#000;border-radius:0 0 7px 7px;z-index:2;}
+.ph-cnt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.ph-em{font-size:24px;}
+.ph-lbl{font-size:6px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.06em;}
+.ph-shadow{width:70px;height:12px;background:radial-gradient(ellipse,rgba(0,0,0,.25),transparent 70%);border-radius:50%;margin-top:10px;filter:blur(4px);}
+
+.ap3{position:relative;width:110px;height:90px;
+transform:rotateX(5deg) rotateY(-10deg);
+transform-style:preserve-3d;
+animation:apfl 4s ease-in-out infinite;cursor:pointer;transition:transform .5s;}
+.ap3:hover{transform:rotateX(1deg) rotateY(0deg) scale(1.1);animation:none;}
+@keyframes apfl{0%,100%{transform:rotateX(5deg) rotateY(-10deg) translateY(0);}50%{transform:rotateX(5deg) rotateY(-10deg) translateY(-7px);}}
+.ap-case{width:80px;height:70px;background:linear-gradient(145deg,#f5f5f7,#e8e8ed,#efeff4);border-radius:16px;margin:0 auto;position:relative;
+box-shadow:0 0 0 1px rgba(0,0,0,.06),0 14px 36px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.9);}
+.ap-line{position:absolute;top:28px;left:4px;right:4px;height:1px;background:rgba(0,0,0,.09);}
+.ap-led{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(–gr);box-shadow:0 0 7px rgba(52,199,89,.55);animation:led 2s ease-in-out infinite;}
+@keyframes led{0%,100%{opacity:.7}50%{opacity:1}}
+.ap-el,.ap-er{position:absolute;width:13px;height:26px;background:linear-gradient(145deg,#f5f5f7,#dfe0e6);border-radius:7px 7px 11px 11px;top:-11px;box-shadow:0 4px 10px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.9);}
+.ap-el{left:12px;}
+.ap-er{right:12px;}
+.ap-shadow{width:70px;height:12px;background:radial-gradient(ellipse,rgba(0,0,0,.18),transparent 70%);border-radius:50%;margin:10px auto 0;filter:blur(4px);}
+
+.cl3{width:110px;height:90px;
+transform:rotateX(5deg) rotateY(-10deg);
+transform-style:preserve-3d;
+animation:clfl 4s ease-in-out infinite;cursor:pointer;transition:transform .5s;}
+.cl3:hover{transform:rotateX(1deg) rotateY(0deg) scale(1.08);animation:none;}
+@keyframes clfl{0%,100%{transform:rotateX(5deg) rotateY(-10deg) translateY(0);}50%{transform:rotateX(5deg) rotateY(-10deg) translateY(-7px);}}
+
+.pvc{border-radius:var(–r);overflow:hidden;box-shadow:var(–sd);border:1px solid rgba(255,255,255,.75);}
+.pvh{background:linear-gradient(135deg,rgba(15,15,20,.93),rgba(30,30,42,.89));
+backdrop-filter:saturate(200%) blur(30px);padding:18px;display:flex;align-items:center;gap:13px;
+border-bottom:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden;}
+.pvh::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4) 50%,transparent);}
+.pvh::after{content:’’;position:absolute;width:160px;height:160px;background:radial-gradient(circle,rgba(0,113,227,.2),transparent 70%);top:-60px;right:-20px;border-radius:50%;}
+.pvi{width:46px;height:46px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;font-size:22px;}
+.pvinfo{flex:1;z-index:1;}
+.pvm{font-size:11px;font-weight:500;color:rgba(255,255,255,.55);margin-bottom:2px;}
+.pvp{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.03em;text-shadow:0 0 20px rgba(100,160,255,.35);}
+.pvb{background:rgba(245,246,252,.72);backdrop-filter:saturate(180%) blur(20px);padding:16px;}
+.pvs{margin-bottom:13px;}
+.pvst{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–su);margin-bottom:7px;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.si{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);border-radius:9px;padding:7px 9px;}
+.sl{font-size:9px;color:var(–su);margin-bottom:1px;font-weight:500;}
+.sv{font-size:12px;font-weight:600;color:var(–tx);}
+.abox{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:11px;padding:12px;font-size:11px;line-height:1.65;color:var(–tx);white-space:pre-wrap;word-break:break-word;font-family:inherit;max-height:250px;overflow-y:auto;}
+.cbtn{width:100%;margin-top:8px;padding:10px;border-radius:10px;background:rgba(28,28,32,.82);color:#fff;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .22s;}
+.cbtn:hover{background:rgba(28,28,32,.96);}
+.cbtn.ok{background:linear-gradient(135deg,rgba(52,199,89,.88),rgba(48,209,88,.88));}
+
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;position:relative;z-index:1;}
+@media(max-width:560px){.cgrid{grid-template-columns:1fr 1fr;}}
+.cres{margin-top:14px;background:linear-gradient(135deg,rgba(0,113,227,.06),rgba(80,160,255,.04));
+border:1px solid rgba(0,113,227,.15);border-radius:15px;padding:16px;display:none;}
+.cres.on{display:block;animation:fu .38s ease;}
+.pdis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px;}
+@media(max-width:560px){.pdis{grid-template-columns:1fr 1fr;}}
+.pb{background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.85);border-radius:11px;padding:10px;text-align:center;}
+.pb.hl{background:linear-gradient(135deg,rgba(0,113,227,.12),rgba(80,160,255,.08));border-color:rgba(0,113,227,.3);box-shadow:0 3px 16px rgba(0,113,227,.14);}
+.pbl{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(–su);margin-bottom:3px;}
+.pbv{font-size:17px;font-weight:700;color:var(–tx);letter-spacing:-.02em;}
+.pbv.bl{color:var(–ac);}
+.pbv.gr{color:#1a8c3a;}
+.pbs{font-size:9px;color:var(–su);margin-top:1px;}
+.rbar{background:rgba(200,210,230,.4);border-radius:4px;height:5px;overflow:hidden;}
+.rfill{height:100%;border-radius:4px;background:linear-gradient(90deg,#34c759,#0071e3);transition:width .55s cubic-bezier(.34,1.2,.64,1);}
+.cadv{background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.8);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.55;color:var(–tx);margin-top:9px;}
+.buse{width:100%;margin-top:9px;padding:10px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,rgba(0,113,227,.88),rgba(60,150,255,.85));color:#fff;font-size:13px;font-weight:600;font-family:inherit;box-shadow:0 4px 13px var(–ag);transition:all .2s;}
+
+.chi{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.75);border-radius:10px;margin-bottom:5px;cursor:pointer;transition:all .2s;}
+.chi.dn{background:rgba(52,199,89,.08);border-color:rgba(52,199,89,.25);}
+.chb{width:20px;height:20px;border-radius:50%;border:2px solid rgba(180,180,200,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s;}
+.chi.dn .chb{background:var(–gr);border-color:var(–gr);box-shadow:0 0 7px rgba(52,199,89,.4);}
+.chb svg{width:10px;height:10px;color:#fff;opacity:0;transition:opacity .2s;}
+.chi.dn .chb svg{opacity:1;}
+.cht{font-size:12px;font-weight:500;color:var(–tx);}
+.chi.dn .cht{color:var(–su);text-decoration:line-through;}
+.chs{font-size:10px;color:var(–su);margin-top:1px;}
+.cpb{height:5px;background:rgba(200,210,230,.4);border-radius:3px;overflow:hidden;margin-bottom:12px;}
+.cpf{height:100%;border-radius:3px;background:linear-gradient(90deg,#34c759,#0071e3);transition:width .4s;}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="nav-row1">
+    <div style="display:flex;align-items:center;gap:5px;">
+      <button class="nav-back" id="nb" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <span id="nbl">Accueil</span>
+      </button>
+      <div class="nav-logo" id="nl">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Vinted Seller Pro
+      </div>
+    </div>
+    <span class="nav-badge">Pro</span>
+    <div class="nav-dots" id="nds">
+      <div class="nd on" onclick="gp(0)"></div>
+      <div class="nd" onclick="gp(1)"></div>
+      <div class="nd" onclick="gp(2)"></div>
+      <div class="nd" onclick="gp(3)"></div>
+      <div class="nd" onclick="gp(4)"></div>
+    </div>
+  </div>
+  <div class="cat-row" id="catrow">
+    <div class="ctab on" onclick="setCat('mac')"><span class="ci">💻</span> MacBook</div>
+    <div class="ctab" onclick="setCat('iphone')"><span class="ci">📱</span> iPhone</div>
+    <div class="ctab" onclick="setCat('airpod')"><span class="ci">🎧</span> AirPods</div>
+    <div class="ctab" onclick="setCat('vetement')"><span class="ci">👕</span> Vêtements</div>
+  </div>
+</nav>
+
+<div class="sh" id="sh" onclick="gp(1)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span>GLISSER</span>
+</div>
+
+<div class="aw">
+<div class="track" id="track">
+
+<!-- PAGE 0 : ANNONCE -->
+
+<div class="pg" id="pg0">
+<div class="wrap">
+
+<div id="obj-mac" class="obj-wrap">
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="mac-body" id="mac3d">
+      <div class="mac-lid">
+        <div class="mac-screen">
+          <div class="mac-glow"></div>
+          <div class="mac-mbar"><div class="mr"></div><div class="my"></div><div class="mg"></div></div>
+          <div class="mac-cnt">
+            <div class="mac-em" id="mac3d-icon">💻</div>
+            <div class="mac-lbl" id="mac3d-lbl">MACBOOK</div>
+          </div>
+          <div class="mac-al"><svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div class="mac-base-w"><div class="mac-base"></div></div>
+    <div class="mac-notch"></div>
+    <div class="mac-shadow"></div>
+  </div>
+</div>
+
+<div id="obj-iphone" class="obj-wrap" style="display:none">
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="ph3">
+      <div class="ph-body">
+        <div class="ph-screen">
+          <div class="ph-glow"></div>
+          <div class="ph-notch"></div>
+          <div class="ph-cnt"><div class="ph-em">📱</div><div class="ph-lbl">IPHONE</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ph-shadow"></div>
+  </div>
+</div>
+
+<div id="obj-airpod" class="obj-wrap" style="display:none">
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="ap3">
+      <div class="ap-el"></div>
+      <div class="ap-er"></div>
+      <div class="ap-case">
+        <div class="ap-line"></div>
+        <div class="ap-led"></div>
+      </div>
+    </div>
+    <div class="ap-shadow"></div>
+  </div>
+</div>
+
+<div id="obj-vetement" class="obj-wrap" style="display:none">
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <div class="cl3">
+      <svg viewBox="0 0 110 90" width="110" height="90" style="filter:drop-shadow(0 10px 22px rgba(0,0,0,.22));">
+        <defs>
+          <linearGradient id="tg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#667eea"/>
+            <stop offset="100%" style="stop-color:#764ba2"/>
+          </linearGradient>
+          <linearGradient id="tg2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,.15)"/>
+            <stop offset="100%" style="stop-color:transparent"/>
+          </linearGradient>
+        </defs>
+        <path d="M8 18 L0 42 L22 47 L18 86 L92 86 L88 47 L110 42 L102 18 L78 8 Q74 4 68 7 Q60 16 55 16 Q50 16 42 7 Q36 4 32 8 Z" fill="url(#tg1)"/>
+        <path d="M8 18 L0 42 L22 47 L18 86 L92 86 L88 47 L110 42 L102 18 L78 8 Q74 4 68 7 Q60 16 55 16 Q50 16 42 7 Q36 4 32 8 Z" fill="url(#tg2)"/>
+        <path d="M8 18 L0 42 L22 47 L18 86 L92 86 L88 47 L110 42 L102 18 L78 8 Q74 4 68 7 Q60 16 55 16 Q50 16 42 7 Q36 4 32 8 Z" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+        <text x="55" y="56" text-anchor="middle" font-size="11" font-weight="700" fill="rgba(255,255,255,.75)" font-family="system-ui">MODE</text>
+      </svg>
+    </div>
+    <div style="width:80px;height:11px;background:radial-gradient(ellipse,rgba(0,0,0,.18),transparent 70%);border-radius:50%;margin-top:6px;filter:blur(4px);"></div>
+  </div>
+</div>
+
+<div class="hgrid">
+  <div>
+    <!-- MAC FORM -->
+    <div id="form-mac">
+      <div class="card mb">
+        <div class="ct"><span class="dot"></span>Modèle & Configuration</div>
+        <div class="fg"><label>Modèle MacBook</label>
+          <select id="mac-mod"><option value="">Choisir un modèle...</option>
+            <optgroup label="MacBook Air"><option>MacBook Air M1 (2020)</option><option>MacBook Air M2 13" (2022)</option><option>MacBook Air M3 13" (2024)</option><option>MacBook Air M3 15" (2024)</option></optgroup>
+            <optgroup label="MacBook Pro"><option>MacBook Pro 13" M1 (2020)</option><option>MacBook Pro 13" M2 (2022)</option><option>MacBook Pro 14" M1 Pro (2021)</option><option>MacBook Pro 14" M2 Pro (2023)</option><option>MacBook Pro 14" M3 Pro (2024)</option><option>MacBook Pro 16" M1 Pro (2021)</option><option>MacBook Pro 16" M2 Pro (2023)</option><option>MacBook Pro 16" M3 Pro (2024)</option></optgroup>
+          </select>
+        </div>
+        <div class="fr">
+          <div><label>RAM</label><select id="mac-ram"><option>8 Go</option><option>16 Go</option><option>24 Go</option><option>32 Go</option><option>48 Go</option></select></div>
+          <div><label>Stockage</label><select id="mac-ssd"><option>256 Go</option><option>512 Go</option><option>1 To</option><option>2 To</option></select></div>
+        </div>
+        <div class="fr">
+          <div><label>Couleur</label><select id="mac-col"><option>Space Gray</option><option>Silver</option><option>Midnight</option><option>Starlight</option><option>Gold</option></select></div>
+          <div><label>macOS</label><input id="mac-os" placeholder="ex : Sequoia 15.3"></div>
+        </div>
+        <div class="fg"><label>Clavier</label>
+          <div class="chips" id="ch-clav">
+            <div class="chip on" onclick="tch(this)">AZERTY 🇫🇷</div>
+            <div class="chip" onclick="tch(this)">QWERTY 🇺🇸</div>
+            <div class="chip" onclick="tch(this)">QWERTY UK 🇬🇧</div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb">
+        <div class="ct"><span class="dot dg"></span>État & Batterie</div>
+        <div class="fg"><label>État général</label>
+          <div class="chips" id="ch-etat">
+            <div class="chip" onclick="sngl(this,'ch-etat')">Neuf</div>
+            <div class="chip on" onclick="sngl(this,'ch-etat')">Excellent</div>
+            <div class="chip" onclick="sngl(this,'ch-etat')">Très bon</div>
+            <div class="chip" onclick="sngl(this,'ch-etat')">Bon état</div>
+          </div>
+        </div>
+        <div class="fr">
+          <div><label>Cycles batterie</label><input id="mac-cyc" type="number" placeholder="ex : 120"></div>
+          <div><label>Santé batterie</label><input id="mac-san" placeholder="ex : 95%"></div>
+        </div>
+        <div class="fg"><label>Défauts (optionnel)</label><textarea id="mac-def" placeholder="Rayures, traces..."></textarea></div>
+      </div>
+      <div class="card mb">
+        <div class="ct"><span class="dot do"></span>Prix & Accessoires</div>
+        <div class="fr">
+          <div><label>Prix demandé (€)</label><input id="mac-px" type="number" placeholder="899"></div>
+          <div><label>Prix neuf Apple (€)</label><input id="mac-pxn" type="number" placeholder="1499"></div>
+        </div>
+        <div class="fg"><label>Accessoires inclus</label>
+          <div class="chips" id="ch-acc">
+            <div class="chip on" onclick="tch(this)">Chargeur</div>
+            <div class="chip" onclick="tch(this)">Boîte Apple</div>
+            <div class="chip" onclick="tch(this)">Câble USB-C</div>
+            <div class="chip" onclick="tch(this)">Coque</div>
+          </div>
+        </div>
+        <div class="fr">
+          <div><label>Garantie</label><select id="mac-gar"><option value="non">Aucune</option><option value="apple">Garantie Apple</option><option value="ac">Apple Care+</option></select></div>
+          <div><label>Ville</label><input id="mac-vil" placeholder="Paris 75"></div>
+        </div>
+        <div class="fg"><label>Négociation</label><select id="mac-neg"><option value="non">Prix ferme</option><option value="peu">Légèrement négo.</option><option value="oui">Ouvert aux offres</option></select></div>
+      </div>
+      <div class="card mb">
+        <div class="ct"><span class="dot dr"></span>Sécurité Vendeur</div>
+        <div class="tg">
+          <div class="ti"><div><div class="tl">📹 Tout filmé</div><div class="ts">Emballage & envoi filmés</div></div><button class="tog on" id="t-mf" onclick="this.classList.toggle('on')"></button></div>
+          <div class="ti"><div><div class="tl">🚫 Anti-remboursement</div><div class="ts">Mention dans l'annonce</div></div><button class="tog on" id="t-mr" onclick="this.classList.toggle('on')"></button></div>
+          <div class="ti"><div><div class="tl">📦 Colissimo suivi</div></div><button class="tog on" id="t-ms" onclick="this.classList.toggle('on')"></button></div>
+          <div class="ti"><div><div class="tl">🔒 iCloud déconnecté</div></div><button class="tog on" id="t-mi" onclick="this.classList.toggle('on')"></button></div>
+        </div>
+      </div>
+    </div>
+
+```
+<!-- IPHONE FORM -->
+<div id="form-iphone" style="display:none">
+  <div class="card mb">
+    <div class="ct"><span class="dot dp"></span>Modèle iPhone</div>
+    <div class="fg"><label>Modèle</label>
+      <select id="ip-mod">
+        <option value="">Choisir...</option>
+        <option>iPhone 16 Pro Max</option><option>iPhone 16 Pro</option><option>iPhone 16 Plus</option><option>iPhone 16</option>
+        <option>iPhone 15 Pro Max</option><option>iPhone 15 Pro</option><option>iPhone 15 Plus</option><option>iPhone 15</option>
+        <option>iPhone 14 Pro Max</option><option>iPhone 14 Pro</option><option>iPhone 14</option>
+        <option>iPhone 13 Pro Max</option><option>iPhone 13 Pro</option><option>iPhone 13</option>
+        <option>iPhone 12</option><option>iPhone SE (3ème gén.)</option>
+      </select>
+    </div>
+    <div class="fr">
+      <div><label>Capacité</label><select id="ip-cap"><option>128 Go</option><option>256 Go</option><option>512 Go</option><option>1 To</option></select></div>
+      <div><label>Couleur</label><select id="ip-col"><option>Noir titane</option><option>Blanc</option><option>Titane naturel</option><option>Titane désert</option><option>Rose</option><option>Bleu</option><option>Violet</option><option>Jaune</option><option>Rouge</option></select></div>
+    </div>
+    <div class="fr">
+      <div><label>État</label><select id="ip-et"><option>Neuf / Jamais utilisé</option><option>Excellent état</option><option>Très bon état</option><option>Bon état</option></select></div>
+      <div><label>Santé batterie</label><input id="ip-bat" placeholder="ex : 91%"></div>
+    </div>
+    <div class="fg"><label>Opérateur</label><select id="ip-op"><option>Débloqué tous opérateurs</option><option>Orange</option><option>SFR</option><option>Bouygues</option><option>Free</option></select></div>
+    <div class="fg"><label>Défauts (optionnel)</label><textarea id="ip-def" placeholder="Micro-rayures..."></textarea></div>
+    <div class="fr">
+      <div><label>Prix demandé (€)</label><input id="ip-px" type="number" placeholder="699"></div>
+      <div><label>Prix neuf (€)</label><input id="ip-pxn" type="number" placeholder="1099"></div>
+    </div>
+    <div class="fg"><label>Accessoires</label>
+      <div class="chips" id="ch-ipacc">
+        <div class="chip on" onclick="tch(this)">Câble USB-C</div>
+        <div class="chip" onclick="tch(this)">Boîte originale</div>
+        <div class="chip" onclick="tch(this)">Coque</div>
+        <div class="chip" onclick="tch(this)">Verre trempé</div>
+      </div>
+    </div>
+    <div class="fr">
+      <div><label>Ville</label><input id="ip-vil" placeholder="Paris 75"></div>
+      <div><label>Négociation</label><select id="ip-neg"><option value="non">Prix ferme</option><option value="peu">Légèrement négo.</option><option value="oui">Ouvert aux offres</option></select></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <div class="ct"><span class="dot dr"></span>Sécurité</div>
+    <div class="tg">
+      <div class="ti"><div><div class="tl">📹 Envoi filmé</div></div><button class="tog on" id="t-if" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">🚫 Anti-remboursement</div></div><button class="tog on" id="t-ir" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">🍎 iCloud déconnecté</div></div><button class="tog on" id="t-ii" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">📦 Colissimo suivi</div></div><button class="tog on" id="t-is" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+  </div>
+</div>
+
+<!-- AIRPODS FORM -->
+<div id="form-airpod" style="display:none">
+  <div class="card mb">
+    <div class="ct"><span class="dot dp"></span>Modèle AirPods</div>
+    <div class="fg"><label>Modèle</label>
+      <select id="ap-mod">
+        <option value="">Choisir...</option>
+        <option>AirPods Pro 2ème gén.</option><option>AirPods Pro 1ère gén.</option>
+        <option>AirPods 4</option><option>AirPods 3ème gén.</option><option>AirPods 2ème gén.</option>
+        <option>AirPods Max (USB-C)</option><option>AirPods Max (Lightning)</option>
+      </select>
+    </div>
+    <div class="fr">
+      <div><label>État</label><select id="ap-et"><option>Neuf</option><option>Excellent état</option><option>Très bon état</option><option>Bon état</option></select></div>
+      <div><label>Batterie boîtier</label><input id="ap-bat" placeholder="ex : 95%"></div>
+    </div>
+    <div class="fg"><label>Inclus</label>
+      <div class="chips" id="ch-apacc">
+        <div class="chip on" onclick="tch(this)">Boîtier de charge</div>
+        <div class="chip" onclick="tch(this)">Câble USB-C</div>
+        <div class="chip" onclick="tch(this)">Boîte originale</div>
+        <div class="chip" onclick="tch(this)">Embouts neufs</div>
+      </div>
+    </div>
+    <div class="fr">
+      <div><label>Prix demandé (€)</label><input id="ap-px" type="number" placeholder="149"></div>
+      <div><label>Prix neuf (€)</label><input id="ap-pxn" type="number" placeholder="299"></div>
+    </div>
+    <div class="fg"><label>Défauts (optionnel)</label><textarea id="ap-def" placeholder="Traces, grip..."></textarea></div>
+    <div class="fr">
+      <div><label>Ville</label><input id="ap-vil" placeholder="Paris 75"></div>
+      <div><label>Négociation</label><select id="ap-neg"><option value="non">Prix ferme</option><option value="peu">Légèrement négo.</option><option value="oui">Ouvert aux offres</option></select></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <div class="ct"><span class="dot dr"></span>Sécurité</div>
+    <div class="tg">
+      <div class="ti"><div><div class="tl">📹 Envoi filmé</div></div><button class="tog on" id="t-af" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">🚫 Anti-remboursement</div></div><button class="tog on" id="t-ar" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">📦 Colissimo suivi</div></div><button class="tog on" id="t-as" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+  </div>
+</div>
+
+<!-- VÊTEMENTS FORM -->
+<div id="form-vetement" style="display:none">
+  <div class="card mb">
+    <div class="ct"><span class="dot dp"></span>Infos du vêtement</div>
+    <div class="fg"><label>Type d'article</label>
+      <select id="vt-type">
+        <option value="">Choisir...</option>
+        <option>T-shirt</option><option>Chemise / Chemisier</option><option>Pull / Sweat</option>
+        <option>Veste / Blazer</option><option>Manteau / Parka</option><option>Doudoune</option>
+        <option>Jean</option><option>Pantalon</option><option>Short</option>
+        <option>Robe</option><option>Jupe</option><option>Ensemble / Survêtement</option>
+        <option>Sneakers / Chaussures</option><option>Sac / Sacoche</option><option>Accessoire</option>
+      </select>
+    </div>
+    <div class="fr">
+      <div><label>Marque</label><input id="vt-marq" placeholder="ex : Nike, Zara..."></div>
+      <div><label>Taille</label><input id="vt-tail" placeholder="ex : M, 42, L..."></div>
+    </div>
+    <div class="fr">
+      <div><label>Couleur</label><input id="vt-col" placeholder="ex : Noir, Blanc..."></div>
+      <div><label>Matière</label><input id="vt-mat" placeholder="ex : Coton, Lin..."></div>
+    </div>
+    <div class="fg"><label>État</label>
+      <div class="chips" id="ch-vtet">
+        <div class="chip" onclick="sngl(this,'ch-vtet')">Neuf avec étiquette</div>
+        <div class="chip on" onclick="sngl(this,'ch-vtet')">Très bon état</div>
+        <div class="chip" onclick="sngl(this,'ch-vtet')">Bon état</div>
+        <div class="chip" onclick="sngl(this,'ch-vtet')">État satisfaisant</div>
+      </div>
+    </div>
+    <div class="fg"><label>Description / défauts</label><textarea id="vt-desc" placeholder="Détails, défauts, raison de vente..."></textarea></div>
+    <div class="fr">
+      <div><label>Prix demandé (€)</label><input id="vt-px" type="number" placeholder="25"></div>
+      <div><label>Prix boutique (€)</label><input id="vt-pxn" type="number" placeholder="79"></div>
+    </div>
+    <div class="fr">
+      <div><label>Ville</label><input id="vt-vil" placeholder="Paris 75"></div>
+      <div><label>Négociation</label><select id="vt-neg"><option value="non">Prix ferme</option><option value="peu">Légèrement négo.</option><option value="oui">Ouvert aux offres</option></select></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <div class="ct"><span class="dot dr"></span>Sécurité</div>
+    <div class="tg">
+      <div class="ti"><div><div class="tl">📹 Envoi filmé</div></div><button class="tog on" id="t-vf" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">🚫 Anti-remboursement</div></div><button class="tog on" id="t-vr" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">📦 Colissimo suivi</div></div><button class="tog on" id="t-vs" onclick="this.classList.toggle('on')"></button></div>
+      <div class="ti"><div><div class="tl">🫧 Lavé avant envoi</div></div><button class="tog on" id="t-vp" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+  </div>
+</div>
+
+<button class="btnp" onclick="gen()">✨ Générer mon annonce Vinted</button>
+```
+
+  </div>
+
+  <!-- PREVIEW -->
+
+  <div>
+    <div class="pvc">
+      <div id="pv-empty">
+        <div class="pvh" style="justify-content:center;padding:26px;">
+          <div style="text-align:center;z-index:1;">
+            <div style="font-size:40px;margin-bottom:9px;opacity:.35;" id="pv-ei">💻</div>
+            <p style="color:rgba(255,255,255,.35);font-size:12px;">Ton aperçu apparaîtra ici ✦</p>
+          </div>
+        </div>
+      </div>
+      <div id="pv-content" style="display:none"></div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- PAGE 1 : CALCULATEUR -->
+
+<div class="pg" id="pg1">
+<div class="wrap" style="padding-top:18px">
+  <div style="text-align:center;padding:14px 0 18px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--ac);text-transform:uppercase;margin-bottom:7px;">✦ Outil</div>
+    <h2 style="font-size:clamp(20px,5vw,34px);font-weight:700;letter-spacing:-.03em;margin-bottom:6px;">Calculateur de <span style="color:var(--ac);">prix Vinted</span></h2>
+    <p style="font-size:12px;color:var(--su);">Prix intelligent basé sur les vrais tarifs Apple</p>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="dot"></span>Paramètres</div>
+    <div class="cgrid">
+      <div><label>Modèle</label><select id="c-mod" onchange="calc()"><option value="">Choisir...</option><optgroup label="MacBook Air"><option value="ma-m1">Air M1 (2020)</option><option value="ma-m2">Air M2 13" (2022)</option><option value="ma-m3">Air M3 13" (2024)</option><option value="ma-m3-15">Air M3 15" (2024)</option></optgroup><optgroup label="MacBook Pro"><option value="mp-m1-13">Pro 13" M1</option><option value="mp-m2-13">Pro 13" M2</option><option value="mp-m1p-14">Pro 14" M1 Pro</option><option value="mp-m2p-14">Pro 14" M2 Pro</option><option value="mp-m3p-14">Pro 14" M3 Pro</option><option value="mp-m1p-16">Pro 16" M1 Pro</option><option value="mp-m2p-16">Pro 16" M2 Pro</option><option value="mp-m3p-16">Pro 16" M3 Pro</option></optgroup></select></div>
+      <div><label>RAM</label><select id="c-ram" onchange="calc()"><option value="8">8 Go</option><option value="16">16 Go</option><option value="24">24 Go</option><option value="32">32 Go</option></select></div>
+      <div><label>Stockage</label><select id="c-ssd" onchange="calc()"><option value="256">256 Go</option><option value="512">512 Go</option><option value="1000">1 To</option><option value="2000">2 To</option></select></div>
+      <div><label>État</label><select id="c-et" onchange="calc()"><option value="neuf">Neuf</option><option value="ex" selected>Excellent</option><option value="tb">Très bon</option><option value="b">Bon</option></select></div>
+      <div><label>Cycles batterie</label><select id="c-cy" onchange="calc()"><option value="a">0–50</option><option value="b" selected>50–150</option><option value="c">150–300</option><option value="d">300–500</option><option value="e">500+</option></select></div>
+      <div><label>Accessoires</label><select id="c-ac" onchange="calc()"><option value="t">Chargeur + boîte</option><option value="c">Chargeur seul</option><option value="n">Sans accessoire</option></select></div>
+    </div>
+    <div class="cres" id="cres">
+      <div class="pdis" id="pdis"></div>
+      <div class="rbar"><div class="rfill" id="rfill" style="width:65%"></div></div>
+      <p style="font-size:10px;color:var(--su);margin:4px 0 10px;text-align:right" id="rlbl"></p>
+      <div class="sep"></div>
+      <div class="cadv" id="cadv"></div>
+      <button class="buse" onclick="usePrice()">↗ Utiliser ce prix dans mon annonce</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 2 : SAUVEGARDES -->
+
+<div class="pg" id="pg2">
+<div class="wrap" style="padding-top:18px">
+  <div class="card mb" style="text-align:center;padding:18px;">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--su);margin-bottom:5px;position:relative;z-index:1;">📁 Annonces sauvegardées</div>
+    <div style="font-size:34px;font-weight:700;color:var(--ac);position:relative;z-index:1;" id="nb-sv">0</div>
+    <div style="font-size:11px;color:var(--su);position:relative;z-index:1;">annonce(s)</div>
+  </div>
+  <div id="sv-list"><div style="text-align:center;padding:44px 16px;color:var(--su);"><div style="font-size:44px;margin-bottom:10px;">📭</div><p style="font-size:14px;font-weight:600;margin-bottom:4px;">Aucune annonce sauvegardée</p><p style="font-size:11px;">Génère et clique "Sauvegarder"</p></div></div>
+</div>
+</div>
+
+<!-- PAGE 3 : CHECKLIST -->
+
+<div class="pg" id="pg3">
+<div class="wrap" style="padding-top:18px">
+  <div style="text-align:center;padding:14px 0 18px;">
+    <h2 style="font-size:clamp(20px,5vw,34px);font-weight:700;letter-spacing:-.03em;margin-bottom:6px;">Checklist <span style="color:var(--ac);">avant vente</span></h2>
+    <p style="font-size:12px;color:var(--su);">Coche toutes les étapes avant de publier</p>
+  </div>
+  <div class="card mb">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;position:relative;z-index:1;">
+      <span style="font-size:11px;color:var(--su);" id="ck-txt">0 / 16 complétées</span>
+      <span style="font-size:19px;font-weight:700;color:var(--ac);" id="ck-pct">0%</span>
+    </div>
+    <div class="cpb" style="position:relative;z-index:1;"><div class="cpf" id="ck-prog" style="width:0%"></div></div>
+    <button onclick="document.querySelectorAll('.chi').forEach(function(i){i.classList.remove('dn')});ckUpd()" style="position:relative;z-index:1;width:100%;padding:8px;border-radius:9px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.4);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">Réinitialiser</button>
+  </div>
+  <div style="font-size:10px;font-weight:700;color:var(--su);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;">🔧 Préparation</div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Déconnecter iCloud & Apple ID</div><div class="chs">Réglages → Apple ID → Se déconnecter</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Effacer le contenu et réinitialiser</div><div class="chs">Pomme → Réglages → Transférer ou réinitialiser</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Vérifier la santé batterie</div><div class="chs">Rapport système → Alimentation → Cycles</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Tester tous les ports et connecteurs</div><div class="chs">Brancher un câble dans chaque port</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Tester Touch ID / Face ID / caméra</div><div class="chs">S'assurer que tout fonctionne</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Nettoyer l'écran et la coque</div><div class="chs">Chiffon microfibre, aucun produit abrasif</div></div></div>
+  <div style="font-size:10px;font-weight:700;color:var(--su);letter-spacing:.07em;text-transform:uppercase;margin:11px 0 6px;">📸 Photos & Annonce</div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Prendre 8+ photos de qualité</div><div class="chs">Écran allumé, ports, dessous, angles</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Capturer l'écran santé batterie</div><div class="chs">À inclure dans les photos Vinted</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Générer l'annonce avec cette appli</div><div class="chs">Copier-coller le texte sur Vinted</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Vérifier le prix avec le calculateur</div><div class="chs">Onglet 💰 Prix de cette appli</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Activer les notifications Vinted</div><div class="chs">Répondre rapidement aux acheteurs</div></div></div>
+  <div style="font-size:10px;font-weight:700;color:var(--su);letter-spacing:.07em;text-transform:uppercase;margin:11px 0 6px;">📦 Expédition</div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Prévoir film bulle + boîte rigide</div><div class="chs">Le Mac ne doit pas bouger dans le colis</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Filmer l'emballage de A à Z</div><div class="chs">Vidéo continue et horodatée</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Envoyer uniquement en Colissimo suivi</div><div class="chs">Conserver le reçu La Poste</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Partager le numéro de suivi</div><div class="chs">Dans la conversation Vinted</div></div></div>
+  <div class="chi" onclick="ck(this)"><div class="chb"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></div><div><div class="cht">Sauvegarder la vidéo d'emballage 30 j</div><div class="chs">En cas de litige ou tentative de fraude</div></div></div>
+</div>
+</div>
+
+<!-- PAGE 4 : MARGES -->
+
+<div class="pg" id="pg4">
+<div class="wrap" style="padding-top:18px">
+  <div style="text-align:center;padding:14px 0 18px;">
+    <h2 style="font-size:clamp(20px,5vw,34px);font-weight:700;letter-spacing:-.03em;margin-bottom:6px;">📈 Mes <span style="color:var(--ac);">marges</span></h2>
+    <p style="font-size:12px;color:var(--su);">Gain net après commission Vinted et livraison</p>
+  </div>
+  <div class="card mb">
+    <div class="ct"><span class="dot do"></span>Paramètres</div>
+    <div class="fr" style="position:relative;z-index:1;"><div><label>Prix de vente (€)</label><input id="mv-v" type="number" placeholder="899" oninput="mg()"></div><div><label>Prix d'achat (€)</label><input id="mv-a" type="number" placeholder="1299" oninput="mg()"></div></div>
+    <div class="fr" style="position:relative;z-index:1;"><div><label>Commission Vinted (%)</label><input id="mv-c" type="number" value="5" oninput="mg()"></div><div><label>Frais livraison (€)</label><input id="mv-l" type="number" value="8" oninput="mg()"></div></div>
+    <div class="fg" style="position:relative;z-index:1;"><label>Frais annexes (€)</label><input id="mv-x" type="number" value="0" oninput="mg()"></div>
+    <div id="mg-res" style="display:none;margin-top:12px;background:linear-gradient(135deg,rgba(0,113,227,.06),rgba(80,160,255,.04));border:1px solid rgba(0,113,227,.15);border-radius:13px;padding:16px;text-align:center;position:relative;z-index:1;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--su);margin-bottom:5px;">Gain net estimé</div>
+      <div style="font-size:40px;font-weight:700;letter-spacing:-.04em;" id="mg-main">—</div>
+      <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:8px;" id="mg-pills"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span class="dot ds"></span>Historique</div>
+    <div id="mg-hist" style="position:relative;z-index:1;"><div style="text-align:center;color:var(--su);font-size:11px;padding:14px;">Lance un calcul pour voir l'historique</div></div>
+  </div>
+</div>
+</div>
+
+</div><!-- track -->
+</div><!-- aw -->
+
+<div class="tbar">
+  <button class="tbtn on" onclick="gp(0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg><span>Annonce</span></button>
+  <button class="tbtn" onclick="gp(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Prix</span></button>
+  <button class="tbtn" onclick="gp(2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Sauveg.</span></button>
+  <button class="tbtn" onclick="gp(3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span>Checklist</span></button>
+  <button class="tbtn" onclick="gp(4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg><span>Marges</span></button>
+</div>
+
+<script>
+var cur=0,hist=[0];
+var PNAMES=['Annonce','Prix','Sauveg.','Checklist','Marges'];
+
+function gp(n){
+  if(n<0||n>4)return;
+  if(n!==cur)hist.push(n);
+  cur=n;
+  document.getElementById('track').style.transform='translateX(-'+n*100+'vw)';
+  document.querySelectorAll('.nd').forEach(function(d,i){d.classList.toggle('on',i===n);});
+  document.querySelectorAll('.tbtn').forEach(function(t,i){t.classList.toggle('on',i===n);});
+  var nb=document.getElementById('nb'),nl=document.getElementById('nl');
+  if(n>0){
+    nb.classList.add('on');
+    var p=hist.length>1?hist[hist.length-2]:0;
+    document.getElementById('nbl').textContent=PNAMES[p===n?0:p];
+    nl.style.display='none';
+  } else {
+    nb.classList.remove('on');
+    nl.style.display='flex';
+  }
+  if(n>0)document.getElementById('sh').classList.add('gone');
+}
+
+function goBack(){
+  if(hist.length>1){
+    hist.pop();
+    var p=hist[hist.length-1];
+    cur=p;
+    document.getElementById('track').style.transform='translateX(-'+p*100+'vw)';
+    document.querySelectorAll('.nd').forEach(function(d,i){d.classList.toggle('on',i===p);});
+    document.querySelectorAll('.tbtn').forEach(function(t,i){t.classList.toggle('on',i===p);});
+    if(p===0){
+      document.getElementById('nb').classList.remove('on');
+      document.getElementById('nl').style.display='flex';
+    } else {
+      var pp=hist.length>1?hist[hist.length-2]:0;
+      document.getElementById('nbl').textContent=PNAMES[pp];
+    }
+  }
+}
+
+// SWIPE
+var swipeStartX=0,swipeLastX=0,isDragging=false;
+var aw=document.querySelector('.aw');
+aw.addEventListener('touchstart',function(e){
+  swipeStartX=e.touches[0].clientX;
+  swipeLastX=swipeStartX;
+  isDragging=true;
+},{passive:true});
+aw.addEventListener('touchmove',function(e){
+  if(!isDragging)return;
+  swipeLastX=e.touches[0].clientX;
+  var diff=swipeStartX-swipeLastX;
+  var base=cur*100;
+  var pct=base+(diff/window.innerWidth*100);
+  if(pct>-10&&pct<410){
+    document.getElementById('track').style.transition='none';
+    document.getElementById('track').style.transform='translateX(-'+pct+'vw)';
+  }
+},{passive:true});
+aw.addEventListener('touchend',function(){
+  document.getElementById('track').style.transition='';
+  var diff=swipeStartX-swipeLastX;
+  if(Math.abs(diff)>60){
+    if(diff>0&&cur<4)gp(cur+1);
+    else if(diff<0&&cur>0)gp(cur-1);
+    else gp(cur);
+  } else {
+    gp(cur);
+  }
+  isDragging=false;
+});
+
+// CATEGORY
+var catCur='mac';
+function setCat(c){
+  catCur=c;
+  var cats=['mac','iphone','airpod','vetement'];
+  document.querySelectorAll('.ctab').forEach(function(t,i){
+    t.classList.toggle('on',cats[i]===c);
+  });
+  var forms={mac:'form-mac',iphone:'form-iphone',airpod:'form-airpod',vetement:'form-vetement'};
+  var objs={mac:'obj-mac',iphone:'obj-iphone',airpod:'obj-airpod',vetement:'obj-vetement'};
+  var icons={mac:'💻',iphone:'📱',airpod:'🎧',vetement:'👕'};
+  Object.keys(forms).forEach(function(k){
+    document.getElementById(forms[k]).style.display=k===c?'block':'none';
+  });
+  Object.keys(objs).forEach(function(k){
+    document.getElementById(objs[k]).style.display=k===c?'flex':'none';
+  });
+  document.getElementById('pv-ei').textContent=icons[c]||'📦';
+  document.getElementById('pv-empty').style.display='block';
+  document.getElementById('pv-content').style.display='none';
+}
+
+// UTILS
+function tch(el){el.classList.toggle('on');}
+function sngl(el,id){
+  document.getElementById(id).querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+}
+function ga(id){
+  return Array.from(document.getElementById(id).querySelectorAll('.chip.on')).map(function(c){return c.textContent.trim();});
+}
+function isOn(id){return document.getElementById(id).classList.contains('on');}
+function v(id){var el=document.getElementById(id);return el?el.value:'';}
+
+// GENERATOR
+var saved=[];
+function gen(){
+  if(catCur==='mac')genMac();
+  else if(catCur==='iphone')genIphone();
+  else if(catCur==='airpod')genAirpod();
+  else genVet();
+}
+
+function showPV(titre,prix,icon,specs,bds,txt,cat){
+  document.getElementById('pv-empty').style.display='none';
+  var c=document.getElementById('pv-content');
+  c.style.display='block';
+  var bdHTML=bds.filter(Boolean).join('');
+  var spHTML=specs.map(function(s){return '<div class="si"><div class="sl">'+s[0]+'</div><div class="sv">'+s[1]+'</div></div>';}).join('');
+  c.innerHTML='<div class="fu"><div class="pvh"><div class="pvi">'+icon+'</div><div class="pvinfo"><div class="pvm">'+titre+'</div><div class="pvp">'+(prix?prix+' €':'— €')+'</div></div></div><div class="pvb"><div class="pvs"><div class="pvst">Infos clés</div><div class="sgrid">'+spHTML+'</div></div><div class="sep"></div><div class="pvs"><div class="pvst">Protections</div><div class="bdgs">'+bdHTML+'</div></div><div class="sep"></div><div class="pvs"><div class="pvst">Annonce Vinted</div><div class="abox" id="av-txt">'+txt+'</div><div style="display:flex;gap:6px;margin-top:7px"><button class="cbtn" style="flex:1" id="cbtn" onclick="cpTxt()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copier</button><button class="cbtn" style="flex:1;background:rgba(0,113,227,.8)" onclick="svDo()">💾 Sauvegarder</button></div></div></div></div>';
+  // Store current for save
+  window._currentSave={titre:titre,prix:prix,cat:cat};
+}
+
+function genMac(){
+  var mod=v('mac-mod');if(!mod){alert('Choisis un modèle !');return;}
+  var ram=v('mac-ram'),ssd=v('mac-ssd'),col=v('mac-col'),os=v('mac-os')||'macOS dernière version';
+  var clav=ga('ch-clav'),etat=ga('ch-etat');var et=etat.length?etat[0]:'Excellent';
+  var cyc=v('mac-cyc'),san=v('mac-san'),def=v('mac-def');
+  var px=v('mac-px'),pxn=v('mac-pxn'),acc=ga('ch-acc');
+  var gar=v('mac-gar'),vil=v('mac-vil'),neg=v('mac-neg');
+  var mf=isOn('t-mf'),mr=isOn('t-mr'),ms=isOn('t-ms'),mi=isOn('t-mi');
+  var puce=mod.includes('M3 Pro')?'Apple M3 Pro':mod.includes('M3')?'Apple M3':mod.includes('M2 Pro')?'Apple M2 Pro':mod.includes('M2')?'Apple M2':mod.includes('M1 Pro')?'Apple M1 Pro':mod.includes('M1')?'Apple M1':'Intel';
+  var pct=0;if(px&&pxn)pct=Math.round((1-px/pxn)*100);
+  var a='✦ '+mod.toUpperCase()+' ✦\n'+ram+' · '+ssd+' · '+col+'\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n💻  CONFIGURATION\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  a+='› Modèle : '+mod+'\n› Puce   : '+puce+'\n› RAM    : '+ram+'\n› SSD    : '+ssd+'\n› Couleur: '+col+'\n› Clavier: '+(clav.length?clav.join(' / '):'AZERTY')+'\n› macOS  : '+os+'\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🔋  BATTERIE & ÉTAT\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  a+='› État : '+et+'\n';if(cyc)a+='› Cycles : '+cyc+'\n';if(san)a+='› Santé : '+san+'\n';
+  if(def)a+='\n⚠️ '+def+'\n\n';else a+='› Aucun défaut visible\n\n';
+  if(acc.length){a+='━━━━━━━━━━━━━━━━━━━━━━\n📦  INCLUS\n━━━━━━━━━━━━━━━━━━━━━━\n\n';acc.forEach(function(x){a+='✓ '+x+'\n';});a+='\n';}
+  if(gar!=='non'){a+='━━━━━━━━━━━━━━━━━━━━━━\n🛡️  GARANTIE\n━━━━━━━━━━━━━━━━━━━━━━\n\n';a+=gar==='ac'?'✓ Apple Care+\n':'✓ Garantie Apple restante\n';a+='\n';}
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🔒  SÉCURITÉ & ENVOI\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  if(mi)a+='🔓 iCloud déconnecté — Mac effacé\n';if(mf)a+='📹 Emballage & envoi filmés\n';if(ms)a+='📦 Colissimo avec suivi\n';if(vil)a+='📍 '+vil+'\n';a+='\n';
+  if(neg==='non')a+='💬 Prix ferme.\n\n';else if(neg==='peu')a+='💬 Légèrement négociable.\n\n';else a+='💬 Ouvert aux offres.\n\n';
+  if(mr)a+='⚠️ Aucune tentative de remboursement frauduleux tolérée. Tout est filmé et horodaté.\n\n';
+  var slug=mod.replace(/[^a-zA-Z0-9]/g,'');
+  a+='#MacBook #Apple #Mac #'+slug+' #MacBookPro #MacBookAir #AppleSilicon #Informatique #Ordinateur #Vinted #Reconditionné';
+  var specs=[['Puce',puce],['RAM',ram],['SSD',ssd],['Couleur',col]];if(cyc)specs.push(['Cycles',cyc]);if(san)specs.push(['Batterie',san]);
+  var bds=['<span class="bd bg_">✓ '+et+'</span>',pct>0?'<span class="bd bo_">−'+pct+'% vs Apple</span>':'',mf?'<span class="bd bb_">📹 Filmé</span>':'',mi?'<span class="bd bg_">🔓 iCloud off</span>':'',ms?'<span class="bd bb_">📦 Suivi</span>':'',mr?'<span class="bd br_">🚫 Anti-refund</span>':''];
+  document.getElementById('mac3d-lbl').textContent=mod.substring(0,12).toUpperCase();
+  showPV(mod,px,'💻',specs,bds,a,'mac');
+}
+
+function genIphone(){
+  var mod=v('ip-mod');if(!mod){alert('Choisis un modèle iPhone !');return;}
+  var cap=v('ip-cap'),col=v('ip-col'),et=v('ip-et'),bat=v('ip-bat');
+  var op=v('ip-op'),def=v('ip-def'),px=v('ip-px'),pxn=v('ip-pxn');
+  var acc=ga('ch-ipacc'),vil=v('ip-vil'),neg=v('ip-neg');
+  var tf=isOn('t-if'),tr=isOn('t-ir'),ti=isOn('t-ii'),tsv=isOn('t-is');
+  var pct=0;if(px&&pxn)pct=Math.round((1-px/pxn)*100);
+  var a='✦ '+mod.toUpperCase()+' ✦\n'+cap+' · '+col+'\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n📱  CARACTÉRISTIQUES\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  a+='› Modèle   : '+mod+'\n› Capacité : '+cap+'\n› Couleur  : '+col+'\n› Opérateur: '+op+'\n› État     : '+et+'\n';
+  if(bat)a+='› Batterie : '+bat+'\n';if(def)a+='\n⚠️ '+def+'\n\n';else a+='\n› Aucun défaut — écran parfait\n\n';
+  if(acc.length){a+='━━━━━━━━━━━━━━━━━━━━━━\n📦  INCLUS\n━━━━━━━━━━━━━━━━━━━━━━\n\n';acc.forEach(function(x){a+='✓ '+x+'\n';});a+='\n';}
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🔒  SÉCURITÉ & ENVOI\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  if(ti)a+='🔓 iCloud déconnecté — iPhone effacé\n';if(tf)a+='📹 Emballage & envoi filmés\n';if(tsv)a+='📦 Colissimo avec suivi\n';if(vil)a+='📍 '+vil+'\n';a+='\n';
+  if(neg==='non')a+='💬 Prix ferme.\n\n';else if(neg==='peu')a+='💬 Légèrement négociable.\n\n';else a+='💬 Ouvert aux offres.\n\n';
+  if(tr)a+='⚠️ Aucune tentative de remboursement frauduleux tolérée. Tout est filmé.\n\n';
+  var slug=mod.replace(/[^a-zA-Z0-9]/g,'');
+  a+='#iPhone #Apple #Smartphone #'+slug+' #iOS #Téléphone #Vinted #Reconditionné';
+  var specs=[['Capacité',cap],['Couleur',col],['Opérateur',op],['État',et]];if(bat)specs.push(['Batterie',bat]);
+  var bds=['<span class="bd bg_">✓ '+et+'</span>',pct>0?'<span class="bd bo_">−'+pct+'% vs Apple</span>':'',tf?'<span class="bd bb_">📹 Filmé</span>':'',ti?'<span class="bd bg_">🔓 iCloud off</span>':'',tsv?'<span class="bd bb_">📦 Suivi</span>':'',tr?'<span class="bd br_">🚫 Anti-refund</span>':''];
+  showPV(mod,px,'📱',specs,bds,a,'iphone');
+}
+
+function genAirpod(){
+  var mod=v('ap-mod');if(!mod){alert('Choisis un modèle AirPods !');return;}
+  var et=v('ap-et'),bat=v('ap-bat'),acc=ga('ch-apacc'),def=v('ap-def');
+  var px=v('ap-px'),pxn=v('ap-pxn'),vil=v('ap-vil'),neg=v('ap-neg');
+  var af=isOn('t-af'),ar=isOn('t-ar'),asv=isOn('t-as');
+  var pct=0;if(px&&pxn)pct=Math.round((1-px/pxn)*100);
+  var a='✦ '+mod.toUpperCase()+' ✦\n'+et+'\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🎧  CARACTÉRISTIQUES\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  a+='› Modèle : '+mod+'\n› État   : '+et+'\n';if(bat)a+='› Batterie boîtier : '+bat+'\n';a+='\n';
+  if(acc.length){a+='━━━━━━━━━━━━━━━━━━━━━━\n📦  INCLUS\n━━━━━━━━━━━━━━━━━━━━━━\n\n';acc.forEach(function(x){a+='✓ '+x+'\n';});a+='\n';}
+  if(def)a+='⚠️ '+def+'\n\n';else a+='› Boîtier et écouteurs impeccables\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🔒  SÉCURITÉ & ENVOI\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  if(af)a+='📹 Emballage & envoi filmés\n';if(asv)a+='📦 Colissimo avec suivi\n';if(vil)a+='📍 '+vil+'\n';a+='\n';
+  if(neg==='non')a+='💬 Prix ferme.\n\n';else if(neg==='peu')a+='💬 Légèrement négociable.\n\n';else a+='💬 Ouvert aux offres.\n\n';
+  if(ar)a+='⚠️ Aucune tentative de remboursement frauduleux tolérée. Tout est filmé.\n\n';
+  var slug=mod.replace(/[^a-zA-Z0-9]/g,'');
+  a+='#AirPods #Apple #Écouteurs #Audio #'+slug+' #Vinted #Reconditionné';
+  var specs=[['Modèle',mod],['État',et]];if(bat)specs.push(['Batterie',bat]);
+  var bds=['<span class="bd bg_">✓ '+et+'</span>',pct>0?'<span class="bd bo_">−'+pct+'% vs Apple</span>':'',af?'<span class="bd bb_">📹 Filmé</span>':'',asv?'<span class="bd bb_">📦 Suivi</span>':'',ar?'<span class="bd br_">🚫 Anti-refund</span>':''];
+  showPV(mod,px,'🎧',specs,bds,a,'airpod');
+}
+
+function genVet(){
+  var type=v('vt-type');if(!type){alert('Choisis un type de vêtement !');return;}
+  var marq=v('vt-marq')||'Non précisée',tail=v('vt-tail'),col=v('vt-col'),mat=v('vt-mat');
+  var desc=v('vt-desc'),etat=ga('ch-vtet');var et=etat.length?etat[0]:'Très bon état';
+  var px=v('vt-px'),pxn=v('vt-pxn'),vil=v('vt-vil'),neg=v('vt-neg');
+  var vf=isOn('t-vf'),vr=isOn('t-vr'),vs=isOn('t-vs'),vp=isOn('t-vp');
+  var pct=0;if(px&&pxn)pct=Math.round((1-px/pxn)*100);
+  var a='✦ '+type.toUpperCase()+' '+marq.toUpperCase()+' ✦\nTaille '+(tail||'—')+' · '+(col||'—')+' · '+et+'\n\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n👕  DESCRIPTION\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  a+='› Type    : '+type+'\n› Marque  : '+marq+'\n› Taille  : '+(tail||'Non précisée')+'\n› Couleur : '+(col||'Non précisée')+'\n';
+  if(mat)a+='› Matière : '+mat+'\n';a+='› État    : '+et+'\n';if(desc)a+='\n📝 '+desc+'\n';a+='\n';
+  a+='━━━━━━━━━━━━━━━━━━━━━━\n🔒  ENVOI & SÉCURITÉ\n━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  if(vp)a+='🫧 Article lavé et propre avant envoi\n';if(vf)a+='📹 Emballage filmé\n';if(vs)a+='📦 Colissimo avec suivi\n';if(vil)a+='📍 '+vil+'\n';a+='\n';
+  if(neg==='non')a+='💬 Prix ferme.\n\n';else if(neg==='peu')a+='💬 Légèrement négociable.\n\n';else a+='💬 Ouvert aux offres.\n\n';
+  if(vr)a+='⚠️ Aucune tentative de remboursement frauduleux tolérée. Envoi filmé.\n\n';
+  var ts=type.replace(/[^\w]/g,''),ms=marq.replace(/[^\w]/g,'');
+  a+='#Mode #Vinted #'+ts+' #'+ms+' #SecondMain #Vintage #Fashion #Friperie';
+  var specs=[['Type',type],['Marque',marq],['Taille',tail||'—'],['État',et]];if(col)specs.push(['Couleur',col]);
+  var bds=['<span class="bd bg_">✓ '+et+'</span>',pct>0?'<span class="bd bo_">−'+pct+'% vs boutique</span>':'',vp?'<span class="bd bg_">🫧 Lavé</span>':'',vf?'<span class="bd bb_">📹 Filmé</span>':'',vs?'<span class="bd bb_">📦 Suivi</span>':'',vr?'<span class="bd br_">🚫 Anti-refund</span>':''];
+  showPV(marq+' – '+type,px,'👕',specs,bds,a,'vetement');
+}
+
+function cpTxt(){
+  var t=document.getElementById('av-txt').innerText;
+  navigator.clipboard.writeText(t).then(function(){
+    var b=document.getElementById('cbtn');
+    b.classList.add('ok');
+    b.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Copié !';
+    setTimeout(function(){
+      b.classList.remove('ok');
+      b.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copier';
+    },2000);
+  });
+}
+
+function svDo(){
+  var cs=window._currentSave||{};
+  var txt=document.getElementById('av-txt').innerText;
+  saved.push({id:Date.now(),titre:cs.titre||'Annonce',prix:cs.prix||'',cat:cs.cat||'mac',txt:txt,date:new Date().toLocaleDateString('fr-FR')});
+  renderSv();
+  gp(2);
+}
+
+var catIc={mac:'💻',iphone:'📱',airpod:'🎧',vetement:'👕'};
+function renderSv(){
+  document.getElementById('nb-sv').textContent=saved.length;
+  if(!saved.length){
+    document.getElementById('sv-list').innerHTML='<div style="text-align:center;padding:44px 16px;color:var(--su);"><div style="font-size:44px;margin-bottom:10px;">📭</div><p style="font-size:14px;font-weight:600;margin-bottom:4px;">Aucune annonce sauvegardée</p><p style="font-size:11px;">Génère et clique "Sauvegarder"</p></div>';
+    return;
+  }
+  document.getElementById('sv-list').innerHTML=saved.map(function(a){
+    return '<div class="card fu mb"><div style="display:flex;align-items:center;gap:11px;margin-bottom:9px;position:relative;z-index:1;"><div style="width:38px;height:38px;background:linear-gradient(135deg,rgba(0,113,227,.12),rgba(80,160,255,.08));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;">'+(catIc[a.cat]||'📦')+'</div><div><div style="font-size:13px;font-weight:700;">'+a.titre+'</div><div style="font-size:16px;font-weight:700;color:var(--ac);">'+a.prix+' €</div></div></div><div class="bdgs" style="position:relative;z-index:1;"><span class="bd bb_">📅 '+a.date+'</span></div><div style="display:flex;gap:6px;margin-top:9px;position:relative;z-index:1;"><button style="flex:1;padding:8px;border-radius:9px;border:none;background:var(--ac);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="(function(){var s=saved.find(function(s){return s.id=='+a.id+'});if(s)navigator.clipboard.writeText(s.txt).then(function(){alert(\'Annonce copiée !\')})})()">📋 Copier</button><button style="flex:1;padding:8px;border-radius:9px;border:1px solid rgba(255,59,48,.2);background:rgba(255,59,48,.08);color:var(--re);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="saved=saved.filter(function(s){return s.id!='+a.id+'});renderSv()">🗑 Supprimer</button></div></div>';
+  }).join('');
+}
+
+// CALCULATEUR
+var AB={'ma-m1':{b:1129},'ma-m2':{b:1299},'ma-m3':{b:1299},'ma-m3-15':{b:1599},'mp-m1-13':{b:1499},'mp-m2-13':{b:1499},'mp-m1p-14':{b:2149},'mp-m2p-14':{b:2199},'mp-m3p-14':{b:2199},'mp-m1p-16':{b:2749},'mp-m2p-16':{b:2799},'mp-m3p-16':{b:2799}};
+var RX={8:0,16:230,24:460,32:460};
+var SX={256:0,512:230,1000:460,2000:690};
+var ED={neuf:.82,ex:.72,tb:.60,b:.50};
+var CD={a:1,b:.97,c:.93,d:.88,e:.80};
+var AX={t:40,c:15,n:0};
+var calcP=0;
+
+function calc(){
+  var k=v('c-mod');if(!k)return;
+  var r=parseInt(v('c-ram')),s=parseInt(v('c-ssd'));
+  var e=v('c-et'),cy=v('c-cy'),ac=v('c-ac');
+  var base=AB[k].b+(RX[r]||0)+(SX[s]||0);
+  var raw=Math.round(base*ED[e]*CD[cy]+AX[ac]);
+  var mn=Math.round(raw*.92),mx=Math.round(raw*1.08);
+  calcP=Math.round(raw/5)*5;
+  var ratio=Math.round(calcP/base*100),eco=100-ratio;
+  document.getElementById('cres').classList.add('on');
+  document.getElementById('rfill').style.width=Math.min(100,ratio)+'%';
+  document.getElementById('rlbl').textContent=ratio+'% du prix neuf Apple — économie de '+eco+'%';
+  document.getElementById('pdis').innerHTML='<div class="pb"><div class="pbl">Neuf Apple</div><div class="pbv">'+base.toLocaleString('fr')+' €</div></div><div class="pb"><div class="pbl">Prix min</div><div class="pbv gr">'+mn.toLocaleString('fr')+' €</div><div class="pbs">Vente rapide</div></div><div class="pb hl"><div class="pbl">💰 Prix idéal</div><div class="pbv bl">'+calcP.toLocaleString('fr')+' €</div><div class="pbs">−'+eco+'% vs neuf</div></div><div class="pb"><div class="pbl">Prix max</div><div class="pbv">'+mx.toLocaleString('fr')+' €</div><div class="pbs">Marge négo</div></div>';
+  var tips=[];
+  if(e==='neuf')tips.push('Mac quasi-neuf → <strong>mise en avant</strong>');
+  if(cy==='e')tips.push('500+ cycles → inclure capture <strong>santé batterie</strong>');
+  if(ac==='t')tips.push('<strong>Boîte + chargeur</strong> = argument fort');
+  if(eco>35)tips.push('<strong>−'+eco+'%</strong> vs Apple — affiche-le');
+  document.getElementById('cadv').innerHTML=tips.length?tips.map(function(t){return '💡 '+t;}).join('<br>'):'💡 Fourchette conseillée : <strong>'+mn+' – '+mx+' €</strong>';
+}
+
+function usePrice(){
+  if(!calcP)return;
+  document.getElementById('mac-px').value=calcP;
+  setCat('mac');gp(0);
+  var b=document.querySelector('.buse');
+  b.style.background='linear-gradient(135deg,rgba(52,199,89,.88),rgba(48,209,88,.85))';
+  b.textContent='✓ '+calcP+' € appliqué !';
+  setTimeout(function(){b.style.background='';b.textContent='↗ Utiliser ce prix dans mon annonce';},2000);
+}
+
+// CHECKLIST
+var CK_TOTAL=16;
+function ck(el){el.classList.toggle('dn');ckUpd();}
+function ckUpd(){
+  var d=document.querySelectorAll('.chi.dn').length;
+  var p=Math.round(d/CK_TOTAL*100);
+  document.getElementById('ck-prog').style.width=p+'%';
+  document.getElementById('ck-txt').textContent=d+' / '+CK_TOTAL+' complétées';
+  document.getElementById('ck-pct').textContent=p+'%';
+}
+
+// MARGES
+var mgHist=[];
+function mg(){
+  var vente=parseFloat(v('mv-v'))||0;if(!vente)return;
+  var achat=parseFloat(v('mv-a'))||0;
+  var comm=parseFloat(v('mv-c'))||5;
+  var livr=parseFloat(v('mv-l'))||8;
+  var anx=parseFloat(v('mv-x'))||0;
+  var fc=Math.round(vente*comm/100*100)/100;
+  var net=vente-fc-livr-anx;
+  var gain=achat>0?Math.round((net-achat)*100)/100:Math.round(net*100)/100;
+  var gpp=achat>0?Math.round((gain/achat)*100):0;
+  var res=document.getElementById('mg-res');res.style.display='block';
+  document.getElementById('mg-main').textContent=(gain>=0?'+':'')+gain.toLocaleString('fr')+' €';
+  document.getElementById('mg-main').style.color=gain>=0?'var(--ac)':'var(--re)';
+  document.getElementById('mg-pills').innerHTML='<span style="background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--su);">Commission −'+fc.toFixed(2)+' €</span><span style="background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--su);">Livraison −'+livr+' €</span>'+(achat>0?'<span style="background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--su);">ROI '+(gpp>0?'+':'')+gpp+'%</span>':'');
+  if(!mgHist.length||mgHist[0].v!==vente){
+    mgHist.unshift({v:vente,g:gain,t:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})});
+    if(mgHist.length>5)mgHist.pop();
+    document.getElementById('mg-hist').innerHTML=mgHist.map(function(h){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.7);border-radius:9px;margin-bottom:5px;font-size:11px;"><span style="color:var(--su);">Vendu '+h.v+' € · '+h.t+'</span><span style="font-weight:700;color:'+(h.g>=0?'var(--ac)':'var(--re)')+';">'+(h.g>=0?'+':'')+h.g+' €</span></div>';
+    }).join('');
+  }
+}
+</script>
+
+</body>
+</html>
